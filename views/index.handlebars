@@ -1,9 +1,39 @@
-<h1>Eat the Burger</h1>
-
-<h2>Make a Burger</h2>
+<h1>Eat da Burger</h1>
 
 
-<div class="form-group">
+
+<ul>
+  {{#each burgers}}
+    {{#unless devoured}}
+      <li>{{burger_name}}</li>
+    {{/unless}}
+  {{/each}}
+</ul>
+
+<h2>Burgers that are devoured!</h2>
+
+<ul>
+  {{#each burgers}}
+    {{#if devoured}}
+      <li>{{burgers}}</li>
+    {{/if}}
+  {{/each}}
+</ul>
+
+<h2>Add a Burger</h2>
+<form class="create-form">
+
+  <div class="form-group">
+    <label for="bu">Burger Name:</label>
+    <input type="text" id="bu" name="name">
+  </div>
+
+
+
+  <button type="submit">Add Burger</button>
+</form>
+
+{{!-- <div class="form-group">
     <label for="ca">Burgers:</label>
     <input type="text" id="bur" name="name">
 
@@ -25,9 +55,9 @@
         {{/if}}
     {{/each}}
 </ul>
+ --}}
 
-
-<script>
+{{!-- <script>
     $(function () {
         event.preventDefault();
         $("#addBurger").on("click", function (event) {
@@ -51,7 +81,7 @@
             var id = $(this).data("id")
             var eatBurger = $(this).data("burger_name");
             var devouredTrue = {
-                devoured = true
+                devoured: true
             };
             $.ajax("/api/burgers" + id, {
                 type: "PUT",
@@ -64,4 +94,50 @@
             )
         })
     })
+</script> --}}\
+<script>
+$(function() {
+  $(".change-sleep").on("click", function(event) {
+    var id = $(this).data("id");
+    var newSleep = $(this).data("newsleep");
+
+    var newSleepState = {
+      sleepy: newSleep
+    };
+
+    // Send the PUT request.
+    $.ajax("/api/burgers/" + id, {
+      type: "PUT",
+      data: newSleepState
+    }).then(
+      function() {
+        console.log("changed sleep to", newSleep);
+        // Reload the page to get the updated list
+        location.reload();
+      }
+    );
+  });
+
+  $(".create-form").on("submit", function(event) {
+    // Make sure to preventDefault on a submit event.
+    event.preventDefault();
+
+    var newBurger = {
+      name: $("#bu").val().trim(),
+      devoured: true
+    };
+
+    // Send the POST request.
+    $.ajax("/api/burgers", {
+      type: "POST",
+      data: newBurger
+    }).then(
+      function() {
+        console.log("created new cat");
+        // Reload the page to get the updated list
+        location.reload();
+      }
+    );
+  });
+});
 </script>
